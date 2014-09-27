@@ -1,12 +1,12 @@
 import numpy as np
 import bisect as bi
-m=100
-mm=100
-data=[sorted(np.random.normal(size=mm),reverse=True) for i in range(m)]
+m=10
+mm=10
+data=[sorted(np.random.uniform(size=mm),reverse=True) for i in range(m)]
 #data=[[0.98253093336882713, 0.4701652427647186, 0.41437836542249018, 0.23499094360627093], [0.59344844333653934, 0.57270905343016709, 0.53730247567712441, 0.460399155602221]]
 pre={0:-1,1:0}
 opt={0:0,1:0}
-band=np.r_[max([max(i)for i in data])+0.12:0:-0.1]
+band=np.r_[max([max(i)for i in data])+0.12:0:-0.01]
 n=len(band)
 tsum={}
 pre={i:0 for i in range(n)}
@@ -29,6 +29,8 @@ for i in range(2,n):
                 continue
             cnt=bib(data[u],band[i])-bib(data[u],band[j])
             tmp+=(cnt*band[j]+band[i])/(1.0+cnt)
+        if i==30:
+            print j,tmp+tsum[j]
         if tsum[i]<tsum[j]+tmp:
             tsum[i]=tsum[j]+tmp
             pre[i]=j
@@ -38,7 +40,7 @@ while t:
     level+=[band[t]]
     t=pre[t]
 level+=[band[0]]
-data=[sorted(np.random.normal(size=mm),reverse=True) for i in range(m)]
+data=[sorted(np.random.uniform(size=mm),reverse=True) for i in range(m)]
 print 'secnd price',sum([data[i][1] for i in range(m)])
 print 'discrete second price',sum([level[bi.bisect(level,data[i][1])-1] for i in range(m)])
 ans=0
@@ -49,4 +51,5 @@ for i in range(m):
     t=t1-t2
     ans+=(t*level[x+1]+level[x])/(t+1.0)
 print 'final answer',ans
+print 'level',level
     
